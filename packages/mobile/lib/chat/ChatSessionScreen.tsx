@@ -1,3 +1,4 @@
+import { deliverableArtifacts } from "../../../shared/artifacts/deliverables";
 import { Feather } from "../icons";
 import { useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -551,7 +552,7 @@ export function ChatSessionScreen({ session: boardSession }: { session: MobileCh
 			canRename: !("projectName" in session),
 			canPin: !("projectName" in session),
 			pinned: "projectName" in session ? false : Boolean(session.isPinned),
-			artifactCount: "projectName" in session ? undefined : session.artifacts?.length,
+			artifactCount: "projectName" in session ? undefined : deliverableArtifacts(session.artifacts ?? []).length,
 			onFiles: filesNavigation.openChanges,
 			onMap: () => router.push(chatSheetRoute({ kind: "conversation-map", markers: conversationMarkers(actionsEntryRef.current?.snapshot ?? current), onSelect: setJumpToSequence })),
 			onOpenShell: () => void openShell(),

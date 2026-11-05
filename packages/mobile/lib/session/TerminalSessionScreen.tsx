@@ -1,3 +1,4 @@
+import { deliverableArtifacts } from "../../../shared/artifacts/deliverables";
 import { Feather } from "../icons";
 import { XtermJsWebView, type XtermWebViewHandle } from "@fressh/react-native-xtermjs-webview";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
@@ -691,7 +692,7 @@ export default function TerminalScreen({ session: resolved }: { session?: RouteS
 	const hasPreview = !!preview && !isReadme;
 	// The terminal has no overflow menu, so its artifacts get their own header
 	// button, shown only once the agent has written something.
-	const artifactCount = !shellOnly && known && "artifacts" in known ? known.artifacts?.length ?? 0 : 0;
+	const artifactCount = !shellOnly && known && "artifacts" in known ? deliverableArtifacts(known.artifacts ?? []).length : 0;
 	const openArtifacts = useCallback(() => {
 		haptics.tap();
 		router.push({ pathname: "/artifacts/[sessionId]", params: { sessionId, title: params.title, hostId: params.hostId } });

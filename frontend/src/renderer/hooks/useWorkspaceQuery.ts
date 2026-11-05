@@ -73,6 +73,7 @@ function toSessionArtifact(artifact: components["schemas"]["SessionArtifact"]): 
 		inlineUrl: artifact.inlineUrl,
 		size: artifact.size,
 		updatedAt: artifact.updatedAt,
+		registered: artifact.registered,
 	};
 }
 
@@ -528,6 +529,7 @@ export function toCloudWorkspaceSession(
 			path: file.path,
 			size: file.size,
 			updatedAt: file.updatedAt,
+			registered: file.registered,
 		})),
 	};
 }

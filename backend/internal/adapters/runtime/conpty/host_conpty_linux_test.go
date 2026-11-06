@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 	"syscall"
 	"testing"
@@ -95,6 +96,8 @@ func TestLinuxPTYConnStreamsResizesAndReportsExit(t *testing.T) {
 	}
 }
 
+var receivedHello = regexp.MustCompile(`received:(?:\x1b\[\?1;2c)?hello\n`)
+
 func TestLinuxDefaultSpawnHostEndToEnd(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	addr, hostPID, err := defaultSpawnHost(ctx, "spawn-e2e", t.TempDir(), []string{
@@ -127,7 +130,9 @@ func TestLinuxDefaultSpawnHostEndToEnd(t *testing.T) {
 			t.Fatalf("get output: %v", outputErr)
 		}
 		text := strings.ReplaceAll(output, "\r", "")
-		if strings.Contains(text, "ready:works:prefix") && strings.Contains(text, "received:hello") {
+		// The host answers the script's DA1 query (ESC [ c) on the PTY's input, so the
+		// line read may carry that reply ahead of what the client typed.
+		if strings.Contains(text, "ready:works:prefix") && receivedHello.MatchString(text) {
 			break
 		}
 		if time.Now().After(deadline) {
